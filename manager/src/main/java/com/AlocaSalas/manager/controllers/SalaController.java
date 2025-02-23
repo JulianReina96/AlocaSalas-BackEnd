@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,7 +16,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.AlocaSalas.manager.exceptions.SalaWithAulaException;
 import com.AlocaSalas.manager.models.dto.SalaDTO;
 import com.AlocaSalas.manager.services.SalaService;
 
@@ -32,6 +35,16 @@ public class SalaController {
     private static final String errosBuscarUmaSalaBadRequest = """
         A sala {0} não está cadastrada no nosso sistema! <br>
         """;
+    
+    
+    @RestControllerAdvice
+    public class SalaControllerAdvice {
+
+        @ExceptionHandler(SalaWithAulaException.class)
+        public ResponseEntity<String> handleSalaWithAulaException(SalaWithAulaException ex) {
+            return ResponseEntity.badRequest().body(ex.getMessage());
+        }
+    }
 
     @Operation(summary = "Busca uma sala pelo nome", responses = {
         @ApiResponse(responseCode = "200", description = "Retorna um ResponseEntity de um SalaDTO", content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE)}),
@@ -50,7 +63,7 @@ public class SalaController {
         @ApiResponse(responseCode = "400", description = "", content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE)})
     })
     @PostMapping
-    public ResponseEntity<SalaDTO> adicionarUmaSala(@RequestBody String nomeSala) {
+    public ResponseEntity<SalaDTO> adicionarUmaSala(@RequestBody String nomeSala)  {
     	
         SalaDTO salaDtoSalvo = salaService.adicionarSala(nomeSala);
 
@@ -75,11 +88,15 @@ public class SalaController {
         @ApiResponse(responseCode = "200", description = "Retorna um ResponseEntity de um SalaDTO com a sala deletada", content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE)}),
         @ApiResponse(responseCode = "400", description = errosBuscarUmaSalaBadRequest, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE)})
     })
-    @DeleteMapping(value = "/{idSala}")
-	public ResponseEntity<SalaDTO> deletarUmaSala(@PathVariable String idSala) {
+    @DeleteMapping(value = "/{idSala}") 
+	public ResponseEntity<SalaDTO> deletarUmaSala(@PathVariable String idSala) throws Exception {
+    	try {
 		salaService.deletarSala(Long.valueOf(idSala));
 		return ResponseEntity.ok().build();
+	}catch(Exception e) {
+		throw e;
 	}
+    	}
     
 	@Operation(summary = "Lista todas as salas cadastradas", responses = {
         @ApiResponse(responseCode = "201", description = "Retorna um ResponseEntity de uma lista de SalaDTO com as salas cadastradas", content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE)}),

@@ -82,8 +82,27 @@ public class HorarioController {
     		horarios.add(new HorarioDTO(horario));
     	}
     	return horarios;
+    }
+    @Operation(summary = "Lista os horarios de disponiveis para a disciplina naquela sala", responses = {
+            @ApiResponse(responseCode = "201", description = "Retorna um ResponseEntity de uma lista de HorarioDTO de um determinado dia da semana ", content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE)}),
+            @ApiResponse(responseCode = "400", description = "", content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE)})
+        })
+    	@GetMapping(value = "/{salaId}/{disciplinaId}")
+    	public List<HorarioDTO> buscarHorariosDisponiveis(@PathVariable Long salaId, @PathVariable Long disciplinaId) {
+
+			List<Horario> horarioBanco = horarioService.buscarHorariosDisponiveis(salaId, disciplinaId);
+			if (horarioBanco == null)
+				return null;
+			List<HorarioDTO> horarios = new ArrayList<HorarioDTO>();
+
+			for (Horario horario : horarioBanco) {
+				horarios.add(new HorarioDTO(horario));
+			}
+			return horarios;
+    		
+    		
+    	}
 		
 		
-		
-	}
+	
 }

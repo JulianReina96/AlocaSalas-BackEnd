@@ -34,6 +34,8 @@ public class Role  implements GrantedAuthority {
 		this.role = roleDto.role();
 	}
 	
+	public Role() {}
+	
 	@Override
 	public String getAuthority() {
 		return this.role;

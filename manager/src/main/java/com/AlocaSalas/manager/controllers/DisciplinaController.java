@@ -71,10 +71,10 @@ public class DisciplinaController {
         @ApiResponse(responseCode = "400", description = errosBuscarUmaDisciplinaBadRequest, content = {@Content(mediaType = MediaType.APPLICATION_JSON_VALUE)})
     })
     @PutMapping(value = "/{idDisciplina}")
-    public ResponseEntity<DisciplinaDTO> editarUmaDisciplina(@RequestBody DisciplinaDTO disciplinaDto, @PathVariable String idDisciplina) {
+    public ResponseEntity<DisciplinaDTO> editarUmaDisciplina(@RequestBody DisciplinaCreateDTO disciplinaDto, @PathVariable String idDisciplina) {
         var disciplinaDtoEditado = disciplinaService.editarDisciplina(disciplinaDto, idDisciplina);
 
-        return ResponseEntity.ok(disciplinaDtoEditado); /*vai ser usado para editar professor tambem*/
+        return ResponseEntity.ok(disciplinaDtoEditado); 
     }
     
     @Operation(summary = "Deleta uma disciplina na aplicação", responses = {
@@ -98,4 +98,17 @@ public class DisciplinaController {
 		return disciplinaService.listarDisciplinas();
 		
 	}
+	
+	@Operation(summary = "Remove um professor da disciplina" , responses = {
+            @ApiResponse(responseCode = "200", description = "Retorna um ResponseEntity de um DisciplinaDTO com o professor removido", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE) }),
+            @ApiResponse(responseCode = "400", description = errosBuscarUmaDisciplinaBadRequest, content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE) }) })
+	    @DeleteMapping(value = "/professor/{idDisciplina}")
+	public ResponseEntity<DisciplinaDTO> deletarProfessorDaDisciplina(@PathVariable String idDisciplina) {
+		disciplinaService.deletarProfessorDaDisciplina(Long.valueOf(idDisciplina));
+        return ResponseEntity.ok().build();
+    }
+
 }
+

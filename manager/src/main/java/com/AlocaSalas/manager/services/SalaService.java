@@ -2,14 +2,17 @@ package com.AlocaSalas.manager.services;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.AlocaSalas.manager.exceptions.SalaNotExistsException;
 import com.AlocaSalas.manager.exceptions.SalaWithAulaException;
+import com.AlocaSalas.manager.models.Aula;
 import com.AlocaSalas.manager.models.Sala;
 import com.AlocaSalas.manager.models.dto.SalaDTO;
+import com.AlocaSalas.manager.repositories.AulaRepository;
 import com.AlocaSalas.manager.repositories.SalaRepository;
 
 
@@ -18,6 +21,9 @@ public class SalaService {
 
 	@Autowired
 	SalaRepository salaRepository;
+	
+	@Autowired
+	AulaRepository aulaRepository;
 	
 	public SalaDTO adicionarSala(String nomeSala) {
         if(nomeSala.isEmpty())
@@ -45,10 +51,12 @@ public class SalaService {
 	}
 	
 	public void deletarSala(Long id) {
-		Sala sala = salaRepository.findById(id).orElseThrow(() -> new SalaNotExistsException(id.toString()));
-		if (sala.getAulas().size() > 0) {
-			throw new SalaWithAulaException("Não é possível deletar uma sala que possui aulas cadastradas");
-		}
+		Sala sala = salaRepository.findById(id).orElseThrow(() -> new SalaNotExistsException(id.toString()));		
+		Set<Aula> aulas = sala.getAulas();
+		if(aulas.size() > 0)            
+		for(Aula aula : aulas) {
+            aulaRepository.delete(aula);
+		}			
 		salaRepository.delete(sala);
 	}
 	

@@ -6,9 +6,12 @@ import com.AlocaSalas.manager.models.Disciplina;
 import com.AlocaSalas.manager.models.Horario;
 import com.AlocaSalas.manager.models.Sala;
 
-public record AulaDTO(Long id, Disciplina disciplina, Sala sala, Horario horario) {
+public record AulaDTO(Long id, Disciplina disciplina, Sala sala, Horario horario, String professor) {
 
-	public AulaDTO(Aula aula) {
-		this(aula.getId(), aula.getDisciplina(), aula.getSala(), aula.getHorario());
-	}
+    public AulaDTO(Aula aula) {
+        this(aula.getId(), aula.getDisciplina(), aula.getSala(), aula.getHorario(), 
+        		aula.getDisciplina().getProfessor().getNome());
+    }
+
+
 }

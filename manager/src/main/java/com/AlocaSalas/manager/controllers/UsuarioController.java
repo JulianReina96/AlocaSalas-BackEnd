@@ -1,5 +1,7 @@
 package com.AlocaSalas.manager.controllers;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -57,8 +59,8 @@ public class UsuarioController {
 	@Operation(summary = "Busca todos usuarios da aplicação")
 	@ApiResponse(description = "retorna um Page com todos usuarios cadastrados na aplicação")
 	@GetMapping
- 	public Page<UsuarioDto> todosUsuarios(Pageable pag) {
-		return usuarioService.todosUsuarios(pag);
+ 	public List<UsuarioDto> todosUsuarios() {
+		return usuarioService.todosUsuarios();
 	}
 
 	@Operation(summary = "Faz o cadastro de usuário na aplicação", responses = {

@@ -1,5 +1,8 @@
 package com.AlocaSalas.manager.services;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,8 +32,14 @@ public class UsuarioService {
 	
 	
 
-	public Page<UsuarioDto> todosUsuarios(Pageable pag) {
-		return usuarioRepository.findAll(pag).map(UsuarioDto::new);
+	public List<UsuarioDto> todosUsuarios() {
+		
+		List<Usuario> usuarios = usuarioRepository.findAll();
+		List<UsuarioDto> usuariosDto = new ArrayList<>();
+		for (Usuario usuario : usuarios) {
+			usuariosDto.add(new UsuarioDto(usuario));
+		}
+		return usuariosDto;
 	}
 
 	public UsuarioDtoSalvo salvar(UsuarioDto usuarioDto) {

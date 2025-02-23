@@ -9,6 +9,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.EqualsAndHashCode;
@@ -22,27 +23,28 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "Aula")
+@Table(name = "Aula", uniqueConstraints = { @UniqueConstraint(columnNames = { "DISCIPLINA_ID", "HORARIO_ID" }),
+	    @UniqueConstraint(columnNames = { "HORARIO_ID", "SALA_ID" }), })
 @Entity
 public class Aula {
-	
-		@EqualsAndHashCode.Include
-	    @GeneratedValue(strategy = GenerationType.IDENTITY)
-	    @Id
-	    @Column(name = "AULA_ID")
-	    private Long Id;
-	
-		@OneToOne
-	    @JoinColumn(name = "DISCIPLINA_ID")
-	    private Disciplina disciplina;
-		
-		@ManyToOne
-		@JoinColumn(name = "SALA_ID")
-		private Sala sala;
-		
-		@OneToOne
-		@JoinColumn(name = "HORARIO_ID")
-		private Horario horario;
+
+	@EqualsAndHashCode.Include
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Id
+	@Column(name = "AULA_ID")
+	private Long Id;
+
+	@ManyToOne
+	@JoinColumn(name = "DISCIPLINA_ID")
+	private Disciplina disciplina;
+
+	@ManyToOne
+	@JoinColumn(name = "SALA_ID")
+	private Sala sala;
+
+	@OneToOne
+	@JoinColumn(name = "HORARIO_ID")
+	private Horario horario;
 
 		public Aula(Disciplina disciplina, Sala sala, Horario horario) {
 			super();
@@ -51,6 +53,8 @@ public class Aula {
 			this.horario = horario;
 			// TODO Auto-generated constructor stub
 		}
+		
+		public Aula() {}
 
 		public Long getId() {
 			return Id;

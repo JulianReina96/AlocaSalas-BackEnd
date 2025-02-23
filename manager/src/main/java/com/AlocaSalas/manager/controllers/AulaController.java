@@ -9,6 +9,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -34,6 +36,19 @@ public class AulaController {
 			return ResponseEntity.badRequest().build();
 		return new ResponseEntity<>(aulaDtoSalvo, HttpStatus.CREATED);
 	}
+	@Operation(summary = "Edita uma aula na aplicação", responses = {
+            @ApiResponse(responseCode = "201", description = "Retorna um ResponseEntity de um AulaDTO com a aula cadastrada", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE) }),
+            @ApiResponse(responseCode = "400", description = "", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE) }) })
+	@PutMapping("/{id}")
+	public ResponseEntity<AulaDTO> editarAula(@RequestBody AulaCreateDTO aulaCreateDto,@PathVariable String id) {
+		AulaDTO aulaEdited = aulaService.editarAula(aulaCreateDto, id);
+		if (aulaEdited == null) {
+			return ResponseEntity.badRequest().build();
+		}
+		return ResponseEntity.ok(aulaEdited);
+	}
 	
 	@Operation(summary = "Busca uma aula pelo id", responses = {
 			@ApiResponse(responseCode = "200", description = "Retorna um ResponseEntity de um AulaDTO", content = {
@@ -48,4 +63,19 @@ public class AulaController {
 		}
 		return ResponseEntity.ok(aulaDto);
 	}
+	
+	@Operation(summary = "Buscar todas as aulas", responses = {
+            @ApiResponse(responseCode = "200", description = "Retorna um ResponseEntity de uma lista de AulaDTO", content = {
+                    @Content(mediaType = MediaType.APPLICATION_JSON_VALUE) }) })
+	@GetMapping
+	public List<AulaDTO> buscarTodasAulas() {
+		
+		List<AulaDTO> aulas = aulaService.buscarTodasAulas();
+		
+		return aulas;
+	}
+	
+	
+	
+	
 }

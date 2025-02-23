@@ -114,6 +114,8 @@ public class Usuario implements UserDetails {
 		this.senha = usuarioDto.senha();
 		this.roles = usuarioDto.roles().stream().map(Role::new).toList();
 	}
+	
+	public Usuario() {}
 
 
 	@Override
