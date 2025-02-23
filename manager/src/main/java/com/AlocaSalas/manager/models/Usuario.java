@@ -104,7 +104,7 @@ public class Usuario implements UserDetails {
 
 
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
 	@JoinTable(name = "usuarios_roles", joinColumns = @JoinColumn(name = "usuarios_id"), inverseJoinColumns = @JoinColumn(name = "roles_id"))
 	private List<Role> roles = new ArrayList();
 
