@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.AlocaSalas.manager.exceptions.UserAlreadyExistsException;
 import com.AlocaSalas.manager.models.dto.UserRoles;
 import com.AlocaSalas.manager.models.dto.UsuarioDto;
 import com.AlocaSalas.manager.models.dto.UsuarioDtoSaida;
@@ -69,8 +70,15 @@ public class UsuarioController {
 			@ApiResponse(responseCode = "400", description = errosSalvarUsuarioBadRequest),
 			@ApiResponse(responseCode = "422", description = errosSalvarUsuarioUnprossableEntity) })
 	@PostMapping
-	public ResponseEntity<UsuarioDtoSalvo> salvar(@RequestBody @Valid UsuarioDto usuarioDto) {
-		return new ResponseEntity<>(usuarioService.salvar(usuarioDto), HttpStatus.CREATED);
+	public ResponseEntity<UsuarioDtoSalvo> salvar(@RequestBody @Valid UsuarioDto usuarioDto)  {
+		try {
+			return new ResponseEntity<>(usuarioService.salvar(usuarioDto), HttpStatus.CREATED);
+		} catch (UserAlreadyExistsException e) {
+			return ResponseEntity.badRequest().build();
+		} catch (RuntimeException e) {
+			return ResponseEntity.unprocessableEntity().build();	
+		}
+		
 	}
 
 	@Operation(summary = "Busca as roles do usuario", responses = {

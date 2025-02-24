@@ -74,14 +74,15 @@ public class ProfessorService {
 				if (disciplina.getAulas().size() > 0) {				
 					for(Aula aula : disciplina.getAulas()) {
                         aulaRepository.delete(aula);
-				}				
+				}			
+				}	
 				disciplina.setProfessor(null);
 				disciplinaRepository.save(disciplina);
 			}
         }       
         professorRepository.delete(professor);
         }
-    }
+    
 
     public ProfessorDTO buscar(String nome) {
         Professor professor;
