@@ -23,7 +23,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Table(name = "Aula", uniqueConstraints = { @UniqueConstraint(columnNames = { "DISCIPLINA_ID", "HORARIO_ID" }),
+@Table(name = "Aula", uniqueConstraints = { 
 	    @UniqueConstraint(columnNames = { "HORARIO_ID", "SALA_ID" }), })
 @Entity
 public class Aula {
